@@ -2,7 +2,9 @@
 
 const chai = require('chai');
 const expect = chai.expect;
+chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
+
 const redis = require('redis-mock');
 const mockery = require('mockery');
 const sinon = require('sinon');
@@ -22,19 +24,20 @@ describe('Ravel SequelizeProvider integration test', () => {
 
     fs = require('fs');
     mockery.registerMock('fs', fs);
+    mockery.registerMock('fs-readdir-recursive', function (basePath) { // eslint-disable-line no-unused-vars
+      return ['test.js'];
+    });
 
     // scaffold basic Ravel app
     Ravel = require('ravel');
-    require('../lib/ravel-sequelize-provider')(Ravel); // eslint-disable-line new-cap, no-new
-    const SequelizeConfigurator = require('../lib/ravel-sequelize-provider').SequelizeConfigurator;
 
     mockery.registerMock('redis', redis);
-    app = new Ravel();
-    new SequelizeConfigurator(app); // eslint-disable-line new-cap, no-new
 
+    app = new Ravel();
+    new (require('../lib/ravel-sequelize-provider'))(app); // eslint-disable-line new-cap, no-new
     app.set('log level', app.log.DEBUG);
     app.set('sequelize options', {
-      user: 'ravel',
+      username: 'ravel',
       password: 'ravel',
       port: 15432
     });
@@ -53,7 +56,7 @@ describe('Ravel SequelizeProvider integration test', () => {
     done();
   });
 
-  it('should expose models etc. from Sequelize to the app', (done) => {
+  it('should expose models etc. from Sequelize to the app', () => {
     stub = sinon.stub(fs, 'lstatSync').callsFake(function () {
       return {
         isDirectory: function () { return true; }
@@ -68,21 +71,23 @@ describe('Ravel SequelizeProvider integration test', () => {
       });
     };
 
-    mockery.registerMock(upath.join(app.cwd, 'models/test.js'), TestModel);
+    mockery.registerMock(upath.join(app.cwd, './models/test.js'), TestModel);
     app.models('./models');
     app.init();
     app.emit('pre listen');
 
-    try {
-      const models = app.getModels();
-      expect(models).to.not.be.null;
-      expect(models).to.have.a.property('size');
-      expect(models.size).to.be(1);
-    } catch (err) {
-      throw err;
-    } finally {
-      app.close();
-      done();
-    }
+    return new Promise((resolve, reject) => {
+      app.sequelize().then(() => {
+        const models = app.getModels();
+        expect(models).to.not.be.null;
+        expect(models).to.have.a.property('size');
+        expect(models.size).to.equal(1);
+        app.close();
+        resolve();
+      }).catch((err) => {
+        app.close();
+        reject(err);
+      });
+    });
   });
 });
