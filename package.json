@@ -1,6 +1,6 @@
 {
   "name": "ravel-sequelize-provider",
-  "version": "0.22.2",
+  "version": "0.22.3",
   "author": "Michael Laccetti <michael@laccetti.com>",
   "description": "Sequelize Provider for Ravel Rapid Application Development Framework",
   "contributors": [
