@@ -4,7 +4,7 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/raveljs/ravel-sequelize-provider/master/LICENSE) [![npm version](https://badge.fury.io/js/ravel-sequelize-provider.svg)](http://badge.fury.io/js/ravel-sequelize-provider) [![Dependency Status](https://david-dm.org/raveljs/ravel-sequelize-provider.svg)](https://david-dm.org/raveljs/ravel-sequelize-provider) [![npm](https://img.shields.io/npm/dm/ravel.svg?maxAge=2592000)](https://www.npmjs.com/package/ravel) [![Build Status](https://travis-ci.org/raveljs/ravel-sequelize-provider.svg?branch=master)](https://travis-ci.org/raveljs/ravel-sequelize-provider) [![Code Climate](https://codeclimate.com/github/raveljs/ravel-sequelize-provider/badges/gpa.svg)](https://codeclimate.com/github/raveljs/ravel-sequelize-provider) [![Test Coverage](https://codeclimate.com/github/raveljs/ravel-sequelize-provider/badges/coverage.svg)](https://codeclimate.com/github/raveljs/ravel-sequelize-provider/coverage)
 
-`ravel-sequelize-provider` is a `DatabaseProvider` for Ravel, wrapping the powerful node [mysql](https://github.com/mysqljs/mysql) library. It supports connection pooling as well as Ravel's [transaction system](http://raveljs.github.io/docs/latest/db/decorators/transaction.js.html) (including rollbacks).
+`ravel-sequelize-provider` is a `DatabaseProvider` for Ravel, wrapping the powerful node [sequelize](http://docs.sequelizejs.com/) library. It supports connection pooling as well as Ravel's [transaction system](http://raveljs.github.io/docs/latest/db/decorators/transaction.js.html) (including rollbacks).
 
 ## Example usage:
 
